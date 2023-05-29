@@ -78,7 +78,7 @@ eventRouter.post('/api/create-event', auth, async (req, res) => {
 eventRouter.get('/api/ongoing-events', auth, async (req, res) => {
     try {
         const today = new Date();
-        const events = await Events.find({ startDateTime: { $lte: today }, endDateTime: { $gt: today } }).sort({ endDateTime: 1 });
+        const events = await Events.find({ startDateTime: { $lte: today }, endDateTime: { $gt: today } }).sort({ endDateTime: -1 });
         console.log(events);
         res.json(events);
     }
@@ -91,7 +91,7 @@ eventRouter.get('/api/ongoing-events', auth, async (req, res) => {
 eventRouter.get('/api/upcoming-events', auth, async (req, res) => {
     try {
         const today = new Date();
-        const events = await Events.find({ startDateTime: { $gt: today } }).sort({ endDateTime: 1 });
+        const events = await Events.find({ startDateTime: { $gt: today } }).sort({ endDateTime: -1 });;
         console.log(events);
         res.json(events);
     }
@@ -159,7 +159,7 @@ eventRouter.post('/api/get-event-rating', auth, async (req, res) => {
 eventRouter.get('/api/saved-events/:userId', auth, async (req, res) => {
     try {
         const userId = req.params.userId;
-        const events = await Events.find({ savedMembers: { $in: [userId] } });
+        const events = await Events.find({ savedMembers: { $in: [userId] } }).sort({ endDateTime: -1 });;
         console.log(events);
         res.json(events);
     }
@@ -172,7 +172,7 @@ eventRouter.get('/api/saved-events/:userId', auth, async (req, res) => {
 eventRouter.get('/api/my-events/:userId', auth, async (req, res) => {
     try {
         const userId = req.params.userId;
-        const events = await Events.find({ authorId: userId });
+        const events = await Events.find({ authorId: userId }).sort({ endDateTime: -1 });;
         console.log(events);
         res.json(events);
     }
@@ -189,7 +189,7 @@ eventRouter.get('/api/joined-events/:userId', auth, async (req, res) => {
                 { memberIds: { $in: [userId] } },
                 { authorId: { $ne: userId } }
             ]
-        });
+        }).sort({ endDateTime: -1 });;
         console.log(events);
         res.json(events);
     }
@@ -202,7 +202,7 @@ eventRouter.get('/api/joined-events/:userId', auth, async (req, res) => {
 eventRouter.get('/api/past-events', auth, async (req, res) => {
     try {
         const today = new Date();
-        const events = await Events.find({ endDateTime: { $lt: today } });
+        const events = await Events.find({ endDateTime: { $lt: today } }).sort({ endDateTime: -1 });;
         res.json(events);
     }
     catch (e) {
@@ -236,7 +236,7 @@ eventRouter.get('/api/search-events/:search', auth, async (req, res) => {
     try {
         const search_query = req.params.search;
         console.log(search_query.toString());
-        const events = await Events.find({ title: { $regex: new RegExp(`^${search_query}`, 'i') } });
+        const events = await Events.find({ title: { $regex: new RegExp(`^${search_query}`, 'i') } }).sort({ endDateTime: -1 });;
         console.log(events);
         return res.json(events);
     }
