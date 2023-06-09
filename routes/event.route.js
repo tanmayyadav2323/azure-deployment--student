@@ -77,7 +77,7 @@ eventRouter.post('/api/create-event', auth, async (req, res) => {
 
 eventRouter.get('/api/ongoing-events', auth, async (req, res) => {
     try {
-        const today = new Date.now();
+        const today = new Date();
         const events = await Events.find({ startDateTime: { $lte: today }, endDateTime: { $gt: today } }).sort({ endDateTime: -1 });
         console.log(events);
         res.json(events);
@@ -90,7 +90,7 @@ eventRouter.get('/api/ongoing-events', auth, async (req, res) => {
 
 eventRouter.get('/api/upcoming-events', auth, async (req, res) => {
     try {
-        const today = new Date.now();
+        const today = new Date();
         const events = await Events.find({ startDateTime: { $gt: today } }).sort({ endDateTime: -1 });;
         console.log(events);
         res.json(events);
@@ -200,7 +200,7 @@ eventRouter.get('/api/joined-events/:userId', auth, async (req, res) => {
 
 eventRouter.get('/api/past-events', auth, async (req, res) => {
     try {
-        const today = new Date.now();
+        const today = new Date();
         const events = await Events.find({ endDateTime: { $lt: today } }).sort({ endDateTime: -1 });;
         res.json(events);
     }
